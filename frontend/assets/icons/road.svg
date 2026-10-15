@@ -1,3 +1,34 @@
-<svg width="30" height="30" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M30 15C30 23.2843 23.2843 30 15 30C6.71573 30 0 23.2843 0 15C0 6.71573 6.71573 0 15 0C23.2843 0 30 6.71573 30 15ZM4.96778 21.5869L9.77337 13.0028H19.8867L24.7491 21.9983C26.1657 20.0284 27 17.6116 27 15C27 8.37258 21.6274 3 15 3C8.37258 3 3 8.37258 3 15C3 17.4325 3.7238 19.696 4.96778 21.5869Z" fill="white" fill-opacity="0.6"/>
+<svg
+  width="30"
+  height="30"
+  viewBox="0 0 30 30"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M30 15C30 23.2843 23.2843 30 15 30C6.71573 30 0 23.2843 0 15C0 6.71573 6.71573 0 15 0C23.2843 0 30 6.71573 30 15ZM4.96778 21.5869L9.77337 13.0028H19.8867L24.7491 21.9983C26.1657 20.0284 27 17.6116 27 15C27 8.37258 21.6274 3 15 3C8.37258 3 3 8.37258 3 15C3 17.4325 3.7238 19.696 4.96778 21.5869Z"
+    fill="white"
+  />
+  <path
+    d="M0.127479 0H0.977337L1.10482 1.1898H0L0.127479 0Z"
+    transform="translate(14.45 14)"
+    fill="black"
+  />
+  <path
+    d="M0.169972 0H1.35977L1.48725 1.27479H0L0.169972 0Z"
+    transform="translate(14.25 16.2)"
+    fill="black"
+  />
+  <path
+    d="M0.339943 0H2.20963L2.4221 2.29462H0L0.339943 0Z"
+    transform="translate(13.8 18.7)"
+    fill="black"
+  />
+  <path
+    d="M0.29745 0H2.84703L3.10198 2.80453H0L0.29745 0Z"
+    transform="translate(13.45 22)"
+    fill="black"
+  />
 </svg>

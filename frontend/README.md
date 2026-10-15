@@ -1,9 +1,9 @@
 # Bike shop mobile app
 
 Expo React Native + TypeScript, Expo Router, NativeWind 4 / Tailwind 3, and
-Reanimated. The home route is the product list; tap a product to open the stage
-(c) detail screen at `/product/[id]`. The shared-component and asset preview
-remains available at `/preview`.
+Reanimated. The home route is the product list; tap a product to open its detail
+screen at `/product/[id]`. The Cart tab opens `/cart`. The shared-component and
+asset preview remains available at `/preview`.
 
 ## Run
 
@@ -23,6 +23,7 @@ requires macOS; physical iPhone development can be started from Windows.
 ```sh
 npm run typecheck
 npm run lint
+npm run test:cart
 npm run web
 ```
 
@@ -53,22 +54,22 @@ assets/
   fonts/            optional local Poppins files and license
   brand/            optional launcher and splash artwork
 src/
-  app/              Expo Router routes: list, product/[id], /preview
+  app/              Expo Router routes: list, product/[id], /cart, /preview
   assets/           typed asset catalog
   components/
     ui/             Screen, AppText, Icon, Button, GradientButton, Card, Chip,
                     QuantityStepper, TabSwitcher, PriceRow, TextField
     products/       list cards/filters, detail backdrop, bike-share panel
-    cart/           future line item and summary
+    cart/           cart line item
     navigation/     floating tab bar
-  screens/          product list and detail composition
+  screens/          product list, detail and cart composition
   theme/            working tokens, bundled Poppins font configuration
   data/             typed mock products and category labels
   types/            shared domain types
-  store/            Zustand favorites and add-to-cart state
+  store/            Zustand favorites, cart quantities and applied promo
   services/         validated CityBikes public API client
   hooks/            cancellable bike-share request and retry state
-  utils/            money formatting (cart totals follow in stage d)
+  utils/            money formatting and cent-based cart totals
 ```
 
 See [the export guide](assets/README.md) before exporting assets. Empty source
@@ -93,11 +94,16 @@ folders contain `.gitkeep` so they survive version control.
   flexible layouts and safe-area insets rather than fixed device widths.
 - Every animation will use Reanimated. Router transitions are disabled for now;
   screen motion and gestures will be implemented in stage (e).
-- Future cart calculations use integer cents. The three pictured items subtotal
-  $6,119.98; a rounded 30% discount and free delivery produce $4,283.99.
-- Cart currently starts empty and accumulates items added on detail; the cart
-  screen and checkout behavior follow in stage (d). Money formatting assumes USD;
+- Cart starts with the three pictured products, one each, so the reference screen
+  can be reviewed immediately. Added products increment that state; quantity zero
+  removes a row. State resets on a full reload. Money formatting assumes USD;
   the source shows dollars but does not identify a currency code.
+- The three displayed unit prices sum to $6,119.98, one cent less than the
+  screenshot subtotal. The 30% order discount is rounded once to the nearest
+  cent ($1,835.99); free delivery gives a state-derived $4,283.99 total. The
+  screenshot shows free delivery but supplies no threshold, so delivery remains
+  free at every cart size. Bike30 starts applied as pictured. Applying any other
+  code clears the discount and shows an invalid-code message.
 - Search matches product name/category case-insensitively and combines with the
   selected category. Closing search clears its query. Reset clears both filters.
 - Favorites use a typed Zustand store and survive filtering/remounts in the same
@@ -107,14 +113,14 @@ folders contain `.gitkeep` so they survive version control.
   Its name and price are mock assumptions, not details supplied by Figma.
 - The Mountain bikes filter intentionally shows an empty state because none of
   the supplied bikes are represented as a mountain bike in the mock catalog.
-- The active Bikes tab is shown in the floating bar. Cart is disabled until
-  stage (d); Map/Profile/Documents are disabled because their flows are outside
+- The active Bikes tab is shown in the floating bar and Cart opens the cart
+  route. Map/Profile/Documents are disabled because their flows are outside
   the three requested screens. Product cards open their own detail route; their
   favorite buttons remain separate from the navigation target.
 - Add to Cart updates integer quantities in Zustand, combining repeated products
   into one line. Confirmation reports the quantity of the current product.
-  Cart and favorites survive navigation but reset on a full reload; no local
-  storage persistence, checkout or cart totals UI is implemented in stage (c).
+  Cart and favorites survive navigation but reset on a full reload. Checkout
+  shows an inline demo message because no payment integration was supplied.
 - The PEUGEOT description is transcribed from `figma/Design.png`. Other products
   reuse the detail layout with their own catalog descriptions, price and image.
 - The detail sheet uses a persistent CSS gradient and masked border on web to
@@ -130,20 +136,22 @@ folders contain `.gitkeep` so they survive version control.
 - The hero uses the same blur, clipped to its angled outline via CSS path on web
   and MaskedView on iOS. Its translucent gradient and path shadows sit above/below
   the blur respectively; the bike and text remain sharp.
-- The background uses `assets/images/backgrounds/product-list-backdrop.svg` directly, including its exact
-  path and gradient, positioned at the previously supplied y=149 on the reference
+- The background uses `assets/images/backgrounds/product-list-backdrop.svg` directly, preserving its path and using the supplied
+  170.76deg gradient, positioned at the previously supplied y=149 on the reference
   390 × 844 canvas. Navigation uses provisional 60 × 40pt selected tiles
   with 44pt touch targets and a shorter 64pt row. Hero shadows follow its path.
+- The PEUGEOT detail uses the user-supplied `peugeot-bike-shadow.png` beneath
+  the bike, replacing the drawn ellipses. The road filter icon uses the four
+  newly supplied lane-mark paths. Their positions are provisional because
+  those individual exports do not include their Figma layout coordinates.
 
 ## Review stages
 
-Current handoff: stage (c) detail with Description / Specification tabs, live
-bike-share data and Add to Cart. Stage (b) remains at `/`; stage (a) remains
-reviewable at `/preview`. Motion is deferred; all transforms are static visual
-geometry. The preview does not modify a shopping cart.
-
-Stop for review before (d) cart and totals and
-(e) Reanimated motion. Exact Figma values can replace working tokens centrally.
+Current handoff: stage (d) cart, editable quantities, promo and totals. Product
+list remains at `/`, detail at `/product/[id]`, and shared components at
+`/preview`. Motion is deferred; all transforms are static visual geometry.
+The preview does not modify the shopping cart. Stop for review before stage (e)
+Reanimated motion. Exact Figma values can replace working tokens centrally.
 
 ## Specification public data
 
@@ -185,6 +193,9 @@ and attribution requirement. External data can change independently of the app.
   navigation and repeat adds across products. A real CityBikes response renders;
   intercepted HTTP/malformed errors, loading, retry, empty and null counts,
   tab caching and an unknown product route are verified in the browser.
+- Cart renders at 375pt and 440pt without horizontal overflow. Browser checks
+  cover the initial cents, quantity changes, invalid/reapplied promo and the
+  checkout response. `npm run test:cart` covers arithmetic and cent rounding.
 - Native rendering has not been tested on a physical device or iOS Simulator.
 - Installation reported 35 dependency audit findings (14 moderate, 21 high).
   No automatic breaking dependency upgrades were applied during scaffolding.

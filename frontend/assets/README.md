@@ -38,6 +38,10 @@ changes; otherwise we will control tint in code. Metro now transforms raw SVG
 imports into react-native-svg components. Use the shared `Icon` component with
 `name`, optional `color`, and SVG sizing props. Exported fill opacity is preserved.
 White fills become `currentColor` at build time; source SVGs are unchanged.
+Exported 60% path opacity remains the default, but can be overridden with
+`fillOpacity`. Category filters use `fillOpacity={1}` and apply glyph opacity once
+at 60% inactive or 100% selected. Restart Metro with a cleared cache after editing
+the SVG transform configuration.
 
 Filename aliases: `bicycle.svg` maps to `bike`, `person.svg` to `profile`, and
 `chevron-forward.svg` to `chevron-right`. The extra `e-bike.svg` is also registered.
@@ -48,7 +52,7 @@ No `heart-filled.svg` was supplied, so no filled-heart asset is claimed to exist
 | File | Pixels |
 | --- | --- |
 | peugeot-lr01.png | 285 × 209 |
-| pilot-trade.png | 80 × 54 |
+| pilot-trade.png | 116 × 79 |
 | smith-trade.png | 124 × 104 |
 | hero-bike.png | 317 × 153 |
 
@@ -59,7 +63,8 @@ the current filenames when replacing them, or use the density suffixes above.
 ## Fonts: `fonts/`
 
 Optional local font destination: Poppins Regular, Medium, SemiBold and Bold TTFs,
-plus their font license. Fonts are not loaded yet; the scaffold uses system fonts.
+plus their font license. Poppins is now loaded from the bundled
+`@expo-google-fonts/poppins` package; local font exports are optional.
 
 ## Brand: `brand/`
 

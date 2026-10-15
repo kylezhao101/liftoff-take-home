@@ -1,8 +1,8 @@
 # Bike shop mobile app
 
 Expo React Native + TypeScript, Expo Router, NativeWind 4 / Tailwind 3, and
-Reanimated. The setup route previews the supplied imagery and SVG icons; product
-screens are not implemented yet.
+Reanimated. The setup route is the stage (a) shared-component preview, followed
+by the supplied imagery and SVG icons. Product screens are not implemented yet.
 
 ## Run
 
@@ -47,17 +47,18 @@ src/
   app/              Expo Router routes (setup screen only for now)
   assets/           typed asset catalog
   components/
-    ui/             shared primitives (Screen and Icon exist; others follow)
+    ui/             Screen, AppText, Icon, Button, GradientButton, Card, Chip,
+                    QuantityStepper, TabSwitcher, PriceRow, TextField
     products/       future hero, product card, category row
     cart/           future line item and summary
     navigation/     future floating navigation
-  theme/            design token file
+  theme/            working tokens, bundled Poppins font configuration
   data/             future typed mock products
   types/            shared domain types
   store/            future Zustand cart and favorites
   services/         future public API client
   hooks/            future data and interaction hooks
-  utils/            future money and totals helpers
+  utils/            money formatting (cart totals follow in stage d)
 ```
 
 See [the export guide](assets/README.md) before exporting assets. Empty source
@@ -72,11 +73,12 @@ folders contain `.gitkeep` so they survive version control.
 - User supplied four product/promo PNGs and 15 SVG icons. All are registered and
   shown in the asset preview. No assets were generated. Filename aliases and
   raster dimensions are documented in `assets/README.md`.
-- Final typography is Poppins; setup screen uses system typography until fonts
-  are supplied or a font package is installed.
+- Poppins Regular, Medium, SemiBold and Bold are bundled through
+  `@expo-google-fonts/poppins`. The app waits for font loading before rendering.
 - Exact Figma colors, gradients, spacing, typography metrics, radii and shadows
-  are unverified. Token groups remain empty. The setup screen's Tailwind defaults
-  are temporary developer scaffolding and are not claimed to match the design.
+  are unverified. The stage (a) working theme uses PNG samples/measurements and
+  explicitly provisional estimates. [Design token notes](docs/design-tokens.md)
+  identify the source and precision of each group and list the needed Figma values.
 - Acceptance widths are 375pt and 440pt as requested; final containers must use
   flexible layouts and safe-area insets rather than fixed device widths.
 - Every animation will use Reanimated. Router transitions are disabled for now;
@@ -84,17 +86,23 @@ folders contain `.gitkeep` so they survive version control.
 - Future cart calculations use integer cents. The three pictured items subtotal
   $6,119.98; a rounded 30% discount and free delivery produce $4,283.99.
 - Cart initial contents, search/filter behavior, unused tabs, checkout behavior,
-  API choice/location and final font delivery remain open decisions.
+  and API choice/location remain open decisions. Money formatting assumes USD;
+  the source shows dollars but does not identify a currency code.
 - Zustand, gradient, gesture and SVG dependencies are prepared for later stages;
   cart state, API fetching and product routes are not implemented yet.
 - No backend connection, authentication or payment integration is configured.
 
 ## Review stages
 
-Current handoff: project structure and asset destinations. Stage (a) still needs
-verified design tokens and the styled shared components. Stop for review before
-continuing to (b) product list, (c) detail + public data, (d) cart and totals, and
-(e) Reanimated motion.
+Current handoff: stage (a) shared components and provisional design tokens.
+The preview exercises chip selection, Description/Specification tabs, quantity
+bounds, derived subtotal, text input, buttons, and disabled/loading states.
+Loading is static text until Reanimated motion is added. No animation is implemented
+in this stage, and preview actions do not change a shopping cart.
+
+Stop for review before (b) product list, (c) detail + public data, (d) cart and
+totals, and (e) Reanimated motion. Exact Figma values can replace working tokens
+centrally without changing component code.
 
 ## Setup references
 
@@ -102,10 +110,12 @@ continuing to (b) product list, (c) detail + public data, (d) cart and totals, a
 - [Expo Router installation](https://docs.expo.dev/router/installation/)
 - [NativeWind stable installation](https://www.nativewind.dev/docs/getting-started/installation)
 
-## Scaffold verification
+## Verification
 
 - TypeScript and Expo ESLint pass.
 - iOS production bundle export passes, including Hermes bytecode compilation.
-- Native rendering and the two target widths have not been tested on a device.
+- The browser component preview renders at 375pt and 440pt with no page overflow;
+  quantity/subtotal updates, tab selection, Poppins loading and SVGs are verified.
+- Native rendering has not been tested on a physical device or iOS Simulator.
 - Installation reported 35 dependency audit findings (14 moderate, 21 high).
   No automatic breaking dependency upgrades were applied during scaffolding.

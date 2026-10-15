@@ -4,12 +4,12 @@ import { icons, type IconName } from '../../assets/icons';
 
 type IconProps = SvgProps & { name: IconName };
 
-/** Keeps exported geometry/opacity; supports color overrides for active states. */
+/** Exported opacity is the default; fillOpacity can normalize paths for filters. */
 export function Icon({ name, color, ...props }: IconProps) {
   const Glyph = icons[name];
   return (
     <Glyph
-      accessible={false}
+      aria-hidden={true}
       color={color ?? (name === 'search' ? '#FAFEFF' : 'white')}
       {...props}
     />

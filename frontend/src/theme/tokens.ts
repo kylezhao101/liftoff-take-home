@@ -123,12 +123,6 @@ export const tokens = {
     pagerGap: 7,
     pagerBottom: 40,
     sheetTabInset: 24,
-    peugeotShadowAsset: {
-      imageOffsetY: 10,
-      width: 301,
-      height: 29,
-      top: 295.3899564361572,
-    },
   },
   cart: {
     promoTextColor: "rgba(255, 255, 255, 0.6)",
@@ -171,7 +165,6 @@ export const tokens = {
     gridOverlap: -12,
     heroDiscountSize: 28,
     productImageAspectRatio: { bike: 1.1, helmet: 1.5 },
-    peugeotShadow: { width: "90%", top: "78%", aspectRatio: 301 / 29 },
     navHeight: 64,
     navTileWidth: 55,
     navTileHeight: 40,

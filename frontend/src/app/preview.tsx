@@ -1,13 +1,14 @@
-import { Image, ScrollView, StyleSheet, View } from 'react-native';
+import { Image, ScrollView, StyleSheet, View } from "react-native";
 
-import { productImages, promoImages } from '../assets/catalog';
-import { iconNames } from '../assets/icons';
-import { Icon } from '../components/ui/Icon';
-import { AppText } from '../components/ui/AppText';
-import { ComponentPreview } from '../components/ComponentPreview';
-import { Card } from '../components/ui/Card';
-import { Screen } from '../components/ui/Screen';
-import { tokens } from '../theme/tokens';
+import { promoImages } from "../assets/catalog";
+import { products } from "../config/products";
+import { iconNames } from "../assets/icons";
+import { Icon } from "../components/ui/Icon";
+import { AppText } from "../components/ui/AppText";
+import { ComponentPreview } from "../components/ComponentPreview";
+import { Card } from "../components/ui/Card";
+import { Screen } from "../components/ui/Screen";
+import { tokens } from "../theme/tokens";
 
 // Shared-component and asset review route, preserved alongside the product list.
 export default function SetupScreen() {
@@ -21,7 +22,16 @@ export default function SetupScreen() {
         <AppText style={styles.muted}>
           Export review only. Screen designs and final tokens follow separately.
         </AppText>
-        {Object.entries({ ...productImages, ...promoImages }).map(([name, source]) => (
+        {[
+          ...products.map((product) => ({
+            name: product.id,
+            source: product.image.source,
+          })),
+          ...Object.entries(promoImages).map(([name, source]) => ({
+            name,
+            source,
+          })),
+        ].map(({ name, source }) => (
           <Card key={name} contentStyle={styles.assetContent}>
             <Image
               source={source}
@@ -50,9 +60,16 @@ export default function SetupScreen() {
 
 const styles = StyleSheet.create({
   screen: { backgroundColor: tokens.colors.background },
-  content: { gap: tokens.spacing.xl, padding: tokens.spacing.gutter, paddingBottom: tokens.spacing.xxl },
-  title: { fontSize: tokens.typography.size.title, lineHeight: tokens.typography.lineHeight.title },
+  content: {
+    gap: tokens.spacing.xl,
+    padding: tokens.spacing.gutter,
+    paddingBottom: tokens.spacing.xxl,
+  },
+  title: {
+    fontSize: tokens.typography.size.title,
+    lineHeight: tokens.typography.lineHeight.title,
+  },
   muted: { color: tokens.colors.muted },
   assetContent: { gap: tokens.spacing.sm },
-  iconAssetContent: { gap: tokens.spacing.sm, alignItems: 'center' },
+  iconAssetContent: { gap: tokens.spacing.sm, alignItems: "center" },
 });

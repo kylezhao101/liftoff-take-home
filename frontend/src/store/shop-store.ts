@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-import { products } from "../data/products";
+import { getProduct, products } from "../config/products";
 import type { CartItem, ProductId } from "../types/product";
 import { BIKE30_CODE } from "../utils/cart";
 
@@ -15,16 +15,20 @@ type ShopState = {
 };
 
 export const useShopStore = create<ShopState>()((set) => ({
-  favoriteIds: ["peugeot-lr01"],
-  cartItems: [
-    { productId: "peugeot-lr01", quantity: 1 },
-    { productId: "pilot-chromoly-520", quantity: 1 },
-    { productId: "smith-trade", quantity: 1 },
-  ],
+  favoriteIds: products
+    .filter((product) => product.initiallyFavorite)
+    .map((product) => product.id),
+  cartItems: [...products]
+    .sort((a, b) => (a.initialCartOrder ?? 0) - (b.initialCartOrder ?? 0))
+    .flatMap((product) =>
+      product.initialCartQuantity
+        ? [{ productId: product.id, quantity: product.initialCartQuantity }]
+        : [],
+    ),
   appliedPromoCode: BIKE30_CODE,
   addToCart: (id) =>
     set((state) => {
-      if (!products.some((product) => product.id === id)) return state;
+      if (!getProduct(id)) return state;
       const existing = state.cartItems.find((item) => item.productId === id);
       return {
         cartItems: existing
@@ -38,11 +42,7 @@ export const useShopStore = create<ShopState>()((set) => ({
     }),
   setQuantity: (id, quantity) =>
     set((state) => {
-      if (
-        !Number.isSafeInteger(quantity) ||
-        quantity < 0 ||
-        !products.some((product) => product.id === id)
-      )
+      if (!Number.isSafeInteger(quantity) || quantity < 0 || !getProduct(id))
         return state;
       if (!state.cartItems.some((item) => item.productId === id)) return state;
       return {

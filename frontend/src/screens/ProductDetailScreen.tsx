@@ -9,7 +9,6 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { productEffects, productImages } from "../assets/catalog";
 import { BikeSharePanel } from "../components/products/BikeSharePanel";
 import { DetailBackdrop } from "../components/products/DetailBackdrop";
 import { DetailSheetSurface } from "../components/products/DetailSheetSurface";
@@ -19,7 +18,7 @@ import { GradientButton } from "../components/ui/GradientButton";
 import { Icon } from "../components/ui/Icon";
 import { Screen } from "../components/ui/Screen";
 import { TabSwitcher, type TabOption } from "../components/ui/TabSwitcher";
-import { products } from "../data/products";
+import { getProduct } from "../config/products";
 import { useShopStore } from "../store/shop-store";
 import { tokens } from "../theme/tokens";
 import { formatMoney } from "../utils/money";
@@ -37,7 +36,9 @@ export default function ProductDetailScreen() {
 }
 
 function ProductDetail({ id }: { id: string }) {
-  const product = products.find((item) => item.id === id);
+  const product = getProduct(id);
+  const imageShadow = product?.image.shadow;
+  const detailShadow = imageShadow?.detail;
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<DetailTab>("description");
@@ -89,31 +90,30 @@ function ProductDetail({ id }: { id: string }) {
               { height: Math.max(280, heroHeight - insets.top) },
             ]}
           >
-            {product.id === "peugeot-lr01" && (
+            {detailShadow && imageShadow && (
               <Image
-                testID="peugeot-bike-shadow"
+                testID={`product-detail-shadow-${product.id}`}
                 accessibilityElementsHidden={true}
                 importantForAccessibility="no"
-                source={productEffects["peugeot-bike-shadow"]}
+                source={imageShadow.source}
                 resizeMode="contain"
                 style={[
-                  styles.peugeotShadow,
+                  styles.imageShadow,
                   {
                     left:
                       (width -
-                        (tokens.detail.peugeotShadowAsset.width * width) /
-                          tokens.detail.referenceWidth) /
+                        (detailShadow.width * width) /
+                          detailShadow.referenceWidth) /
                       2,
                     top:
-                      (tokens.detail.peugeotShadowAsset.top * width) /
-                        tokens.detail.referenceWidth -
+                      (detailShadow.top * width) / detailShadow.referenceWidth -
                       insets.top,
                     width:
-                      (tokens.detail.peugeotShadowAsset.width * width) /
-                      tokens.detail.referenceWidth,
+                      (detailShadow.width * width) /
+                      detailShadow.referenceWidth,
                     height:
-                      (tokens.detail.peugeotShadowAsset.height * width) /
-                      tokens.detail.referenceWidth,
+                      (detailShadow.height * width) /
+                      detailShadow.referenceWidth,
                   },
                 ]}
               />
@@ -142,17 +142,17 @@ function ProductDetail({ id }: { id: string }) {
             <View style={styles.imageFrame}>
               <Image
                 accessibilityLabel={product.name}
-                source={productImages[product.imageKey]}
+                source={product.image.source}
                 resizeMode="contain"
                 style={[
                   styles.image,
-                  product.id === "peugeot-lr01" && {
+                  product.image.detailOffsetY !== undefined && {
                     transform: [
                       {
                         translateY:
-                          (tokens.detail.peugeotShadowAsset.imageOffsetY *
-                            width) /
-                          tokens.detail.referenceWidth,
+                          (product.image.detailOffsetY * width) /
+                          (detailShadow?.referenceWidth ??
+                            tokens.detail.referenceWidth),
                       },
                     ],
                   },
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     paddingTop: tokens.spacing.xl,
   },
   image: { width: tokens.detail.imageWidth, height: "90%" },
-  peugeotShadow: { position: "absolute" },
+  imageShadow: { position: "absolute" },
   pager: {
     flexDirection: "row",
     justifyContent: "center",

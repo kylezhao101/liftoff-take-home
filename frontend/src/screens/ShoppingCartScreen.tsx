@@ -11,7 +11,7 @@ import { Icon } from "../components/ui/Icon";
 import { PriceRow } from "../components/ui/PriceRow";
 import { Screen } from "../components/ui/Screen";
 import { TextField } from "../components/ui/TextField";
-import { products } from "../data/products";
+import { getProduct, products } from "../config/products";
 import { useShopStore } from "../store/shop-store";
 import { tokens } from "../theme/tokens";
 import {
@@ -65,9 +65,7 @@ export default function ShoppingCartScreen() {
         <View style={styles.items}>
           {cartItems.length ? (
             cartItems.map((item) => {
-              const product = products.find(
-                (candidate) => candidate.id === item.productId,
-              );
+              const product = getProduct(item.productId);
               if (!product) return null;
               return (
                 <CartLineItem

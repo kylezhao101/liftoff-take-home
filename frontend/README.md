@@ -55,7 +55,8 @@ assets/
   brand/            optional launcher and splash artwork
 src/
   app/              Expo Router routes: list, product/[id], /cart, /preview
-  assets/           typed asset catalog
+  assets/           shared promo assets and icon registry
+  config/           typed product catalog and category labels
   components/
     ui/             Screen, AppText, Icon, Button, GradientButton, Card, Chip,
                     QuantityStepper, TabSwitcher, PriceRow, TextField
@@ -64,7 +65,6 @@ src/
     navigation/     floating tab bar
   screens/          product list, detail and cart composition
   theme/            working tokens, bundled Poppins font configuration
-  data/             typed mock products and category labels
   types/            shared domain types
   store/            Zustand favorites, cart quantities and applied promo
   services/         validated CityBikes public API client
@@ -104,6 +104,12 @@ folders contain `.gitkeep` so they survive version control.
   screenshot shows free delivery but supplies no threshold, so delivery remains
   free at every cart size. Bike30 starts applied as pictured. Applying any other
   code clears the discount and shows an invalid-code message.
+- Add or edit products in `src/config/products.ts`. Each typed entry holds its
+  category, name, price in cents, description, and static image source. Optional
+  image shadow settings control list/detail placement without product ID checks
+  in the components. Optional initial cart quantity/order and favorite status
+  seed the reference UI. `src/types/product.ts` defines the schema. Keep image
+  `require()` calls with literal paths so Metro can bundle them.
 - Search matches product name/category case-insensitively and combines with the
   selected category. Closing search clears its query. Reset clears both filters.
 - Favorites use a typed Zustand store and survive filtering/remounts in the same

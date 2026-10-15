@@ -1,8 +1,7 @@
 import { Link } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
-import { productEffects, productImages } from "../../assets/catalog";
-import { categoryLabels } from "../../data/products";
+import { categoryLabels } from "../../config/products";
 import { useShopStore } from "../../store/shop-store";
 import { tokens } from "../../theme/tokens";
 import type { Product } from "../../types/product";
@@ -42,22 +41,22 @@ export function ProductCard({ product }: { product: Product }) {
               },
             ]}
           >
-            {product.id === "peugeot-lr01" && (
+            {product.image.shadow?.list && (
               <View
-                testID="peugeot-list-shadow"
+                testID={`product-list-shadow-${product.id}`}
                 accessibilityElementsHidden
                 importantForAccessibility="no"
-                style={styles.peugeotShadowFrame}
+                style={[styles.imageShadowFrame, product.image.shadow.list]}
               >
                 <Image
-                  source={productEffects["peugeot-bike-shadow"]}
+                  source={product.image.shadow.source}
                   resizeMode="contain"
-                  style={styles.peugeotShadowImage}
+                  style={styles.imageShadow}
                 />
               </View>
             )}
             <Image
-              source={productImages[product.imageKey]}
+              source={product.image.source}
               accessibilityLabel={product.name}
               resizeMode="contain"
               style={styles.image}
@@ -96,12 +95,11 @@ const styles = StyleSheet.create({
   },
   imageFrame: { width: "100%", marginBottom: tokens.spacing.md },
   image: { position: "absolute", width: "100%", height: "100%" },
-  peugeotShadowFrame: {
+  imageShadowFrame: {
     position: "absolute",
     alignSelf: "center",
-    ...tokens.list.peugeotShadow,
   },
-  peugeotShadowImage: { width: "100%", height: "100%" },
+  imageShadow: { width: "100%", height: "100%" },
   category: {
     fontSize: tokens.typography.size.caption,
     lineHeight: tokens.typography.lineHeight.caption,

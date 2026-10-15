@@ -1,6 +1,5 @@
 import { Image, StyleSheet, View } from "react-native";
 
-import { productImages } from "../../assets/catalog";
 import { tokens } from "../../theme/tokens";
 import type { Product } from "../../types/product";
 import { formatMoney } from "../../utils/money";
@@ -25,7 +24,7 @@ export function CartLineItem({ product, quantity, onQuantityChange }: Props) {
           border={tokens.cart.previewBorder}
         />
         <Image
-          source={productImages[product.imageKey]}
+          source={product.image.source}
           resizeMode="contain"
           accessibilityLabel={product.name}
           style={styles.image}

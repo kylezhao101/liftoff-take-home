@@ -5,8 +5,9 @@ export const productImages = {
   // User-supplied export name differs from the product's display name.
   'pilot-chromoly-520': require('../../assets/images/products/pilot-trade.png'),
   'smith-trade': require('../../assets/images/products/smith-trade.png'),
+  'electric-sport': require('../../assets/images/promo/hero-bike.png'),
 } satisfies Record<
-  'peugeot-lr01' | 'pilot-chromoly-520' | 'smith-trade',
+  'peugeot-lr01' | 'pilot-chromoly-520' | 'smith-trade' | 'electric-sport',
   ImageSourcePropType
 >;
 

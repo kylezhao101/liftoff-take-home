@@ -1,7 +1,9 @@
 # Figma asset exports
 
 The supplied exports are registered in `src/assets/catalog.ts` and
-`src/assets/icons.ts`. The setup route displays an asset preview.
+`src/assets/icons.ts`. The `/preview` route displays an asset preview.
+The product list also reuses the promo bike image for the extra ELECTRIC – Sport
+mock product; this is an additional catalog entry, not an additional image export.
 
 ## Products: `images/products/`
 
@@ -18,6 +20,9 @@ The base filename is required when using density variants. If exporting just one
 file, export at 3x and keep the base filename; we will set its display size in code.
 
 ## Promo: `images/promo/`
+
+The `images/backgrounds/product-list-backdrop.svg` export is the list's decorative background layer.
+It is imported directly without changing its path, gradient or viewBox crop.
 
 - `hero-bike.png` — silver bike from the 30% Off hero, transparent background.
 

@@ -1,6 +1,9 @@
+import type { ProductImageKey } from '../assets/catalog';
+
 export type ProductId = string;
 
-export type ProductCategory = 'road-bike' | 'mountain-bike' | 'helmet';
+export type ProductCategory = 'electric-bike' | 'road-bike' | 'mountain-bike' | 'helmet';
+export type ProductFilter = 'all' | ProductCategory;
 
 export interface Product {
   id: ProductId;
@@ -8,6 +11,7 @@ export interface Product {
   name: string;
   priceCents: number;
   description: string;
+  imageKey: ProductImageKey;
 }
 
 export interface CartItem {

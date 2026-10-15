@@ -1,8 +1,9 @@
 # Bike shop mobile app
 
 Expo React Native + TypeScript, Expo Router, NativeWind 4 / Tailwind 3, and
-Reanimated. The setup route is the stage (a) shared-component preview, followed
-by the supplied imagery and SVG icons. Product screens are not implemented yet.
+Reanimated. The home route is the product list; tap a product to open the stage
+(c) detail screen at `/product/[id]`. The shared-component and asset preview
+remains available at `/preview`.
 
 ## Run
 
@@ -34,30 +35,39 @@ still be serving SVGs as image assets. Fully stop that server before restarting
 with the command above. Fast Refresh cannot apply changes to `metro.config.js`;
 it must be loaded by a new Metro process.
 
+If Metro cannot resolve a newly added platform component such as
+`DetailSheetSurface`, stop the project's existing Expo servers and run
+`npx expo start --clear --port 8081` from `frontend`. Use that server's URL/QR
+code in the client; avoid leaving a second Metro instance running on another
+port. The native fallback is `DetailSheetSurface.tsx`; web selects
+`DetailSheetSurface.web.tsx` automatically.
+
 ## Layout
 
 ```text
 assets/
+  images/backgrounds/ decorative SVG background layers
   images/products/  transparent bike and helmet exports
   images/promo/     promo hero bike
   icons/            Figma icon exports
   fonts/            optional local Poppins files and license
   brand/            optional launcher and splash artwork
 src/
-  app/              Expo Router routes (setup screen only for now)
+  app/              Expo Router routes: list, product/[id], /preview
   assets/           typed asset catalog
   components/
     ui/             Screen, AppText, Icon, Button, GradientButton, Card, Chip,
                     QuantityStepper, TabSwitcher, PriceRow, TextField
-    products/       future hero, product card, category row
+    products/       list cards/filters, detail backdrop, bike-share panel
     cart/           future line item and summary
-    navigation/     future floating navigation
+    navigation/     floating tab bar
+  screens/          product list and detail composition
   theme/            working tokens, bundled Poppins font configuration
-  data/             future typed mock products
+  data/             typed mock products and category labels
   types/            shared domain types
-  store/            future Zustand cart and favorites
-  services/         future public API client
-  hooks/            future data and interaction hooks
+  store/            Zustand favorites and add-to-cart state
+  services/         validated CityBikes public API client
+  hooks/            cancellable bike-share request and retry state
   utils/            money formatting (cart totals follow in stage d)
 ```
 
@@ -75,34 +85,86 @@ folders contain `.gitkeep` so they survive version control.
   raster dimensions are documented in `assets/README.md`.
 - Poppins Regular, Medium, SemiBold and Bold are bundled through
   `@expo-google-fonts/poppins`. The app waits for font loading before rendering.
-- Exact Figma colors, gradients, spacing, typography metrics, radii and shadows
-  are unverified. The stage (a) working theme uses PNG samples/measurements and
-  explicitly provisional estimates. [Design token notes](docs/design-tokens.md)
-  identify the source and precision of each group and list the needed Figma values.
+- User-supplied gradients, bezel details and tab shadows are recorded exactly.
+  Remaining Figma values use PNG samples/measurements and explicitly provisional
+  estimates. [Design token notes](docs/design-tokens.md) identify their source and
+  precision and list the needed Figma values.
 - Acceptance widths are 375pt and 440pt as requested; final containers must use
   flexible layouts and safe-area insets rather than fixed device widths.
 - Every animation will use Reanimated. Router transitions are disabled for now;
   screen motion and gestures will be implemented in stage (e).
 - Future cart calculations use integer cents. The three pictured items subtotal
   $6,119.98; a rounded 30% discount and free delivery produce $4,283.99.
-- Cart initial contents, search/filter behavior, unused tabs, checkout behavior,
-  and API choice/location remain open decisions. Money formatting assumes USD;
+- Cart currently starts empty and accumulates items added on detail; the cart
+  screen and checkout behavior follow in stage (d). Money formatting assumes USD;
   the source shows dollars but does not identify a currency code.
-- Zustand, gradient, gesture and SVG dependencies are prepared for later stages;
-  cart state, API fetching and product routes are not implemented yet.
+- Search matches product name/category case-insensitively and combines with the
+  selected category. Closing search clears its query. Reset clears both filters.
+- Favorites use a typed Zustand store and survive filtering/remounts in the same
+  app session. They reset on a full reload; PEUGEOT starts favorited as pictured.
+- The PEUGEOT, SMITH and PILOT names/prices come from the reference. A fourth
+  demonstration product, ELECTRIC – Sport ($2,499.99), reuses the promo bike image.
+  Its name and price are mock assumptions, not details supplied by Figma.
+- The Mountain bikes filter intentionally shows an empty state because none of
+  the supplied bikes are represented as a mountain bike in the mock catalog.
+- The active Bikes tab is shown in the floating bar. Cart is disabled until
+  stage (d); Map/Profile/Documents are disabled because their flows are outside
+  the three requested screens. Product cards open their own detail route; their
+  favorite buttons remain separate from the navigation target.
+- Add to Cart updates integer quantities in Zustand, combining repeated products
+  into one line. Confirmation reports the quantity of the current product.
+  Cart and favorites survive navigation but reset on a full reload; no local
+  storage persistence, checkout or cart totals UI is implemented in stage (c).
+- The PEUGEOT description is transcribed from `figma/Design.png`. Other products
+  reuse the detail layout with their own catalog descriptions, price and image.
+- The detail sheet uses a persistent CSS gradient and masked border on web to
+  avoid resizing a measured SVG surface when switching tabs. Native retains
+  the SVG surface; both render the same theme tokens and corner geometry.
+- Only one image per product is supplied. The reference's three pager dots are
+  visual decoration; accessibility reports one image. Additional image exports
+  are needed for a real image pager, whose motion belongs to stage (e).
 - No backend connection, authentication or payment integration is configured.
+- Product cards use the supplied shadows and 100px CSS backdrop blur on web.
+  iOS uses Expo BlurView intensity 100, which is not measured in CSS pixels.
+  Tint opacity is a provisional 0.6; exact native visual fidelity needs device review.
+- The hero uses the same blur, clipped to its angled outline via CSS path on web
+  and MaskedView on iOS. Its translucent gradient and path shadows sit above/below
+  the blur respectively; the bike and text remain sharp.
+- The background uses `assets/images/backgrounds/product-list-backdrop.svg` directly, including its exact
+  path and gradient, positioned at the previously supplied y=149 on the reference
+  390 × 844 canvas. Navigation uses provisional 60 × 40pt selected tiles
+  with 44pt touch targets and a shorter 64pt row. Hero shadows follow its path.
 
 ## Review stages
 
-Current handoff: stage (a) shared components and provisional design tokens.
-The preview exercises chip selection, Description/Specification tabs, quantity
-bounds, derived subtotal, text input, buttons, and disabled/loading states.
-Loading is static text until Reanimated motion is added. No animation is implemented
-in this stage, and preview actions do not change a shopping cart.
+Current handoff: stage (c) detail with Description / Specification tabs, live
+bike-share data and Add to Cart. Stage (b) remains at `/`; stage (a) remains
+reviewable at `/preview`. Motion is deferred; all transforms are static visual
+geometry. The preview does not modify a shopping cart.
 
-Stop for review before (b) product list, (c) detail + public data, (d) cart and
-totals, and (e) Reanimated motion. Exact Figma values can replace working tokens
-centrally without changing component code.
+Stop for review before (d) cart and totals and
+(e) Reanimated motion. Exact Figma values can replace working tokens centrally.
+
+## Specification public data
+
+The design's FREE DATA placeholder contains Vancouver Mobi bike-share availability,
+not manufacturer specifications. It requests
+`https://api.citybik.es/v2/networks/mobibikes` when Specification first opens.
+This fixed city is a demonstration choice; no location permission is requested.
+The endpoint requires no key and its browser CORS response was verified.
+
+The panel shows three reporting stations alphabetically, their available bikes,
+empty docks and update time when a valid timestamp is provided. These are not
+the nearest stations. Missing counts display an em dash rather than zero.
+Data remains cached while toggling tabs on the same detail screen; Refresh
+fetches again. There is no automatic polling or offline fallback data.
+
+Requests time out after 15 seconds and abort on unmount. The client validates
+the remote structure and handles HTTP/network failures, malformed JSON/data and
+an empty station list. Loading placeholders are static until motion stage (e).
+The panel includes the required linked attribution to
+[CityBikes](https://api.citybik.es/v2/), whose documentation defines the data fields
+and attribution requirement. External data can change independently of the app.
 
 ## Setup references
 
@@ -116,6 +178,13 @@ centrally without changing component code.
 - iOS production bundle export passes, including Hermes bytecode compilation.
 - The browser component preview renders at 375pt and 440pt with no page overflow;
   quantity/subtotal updates, tab selection, Poppins loading and SVGs are verified.
+- The product list is checked at both widths: two equal-width columns, square
+  category controls, loaded images, favorites, category/search combinations,
+  empty states and filter reset.
+- Detail is checked at 375pt and 440pt: image, description/tabs, fixed footer,
+  navigation and repeat adds across products. A real CityBikes response renders;
+  intercepted HTTP/malformed errors, loading, retry, empty and null counts,
+  tab caching and an unknown product route are verified in the browser.
 - Native rendering has not been tested on a physical device or iOS Simulator.
 - Installation reported 35 dependency audit findings (14 moderate, 21 high).
   No automatic breaking dependency upgrades were applied during scaffolding.

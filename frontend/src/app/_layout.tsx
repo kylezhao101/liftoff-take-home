@@ -2,6 +2,7 @@ import '../../global.css';
 
 import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
+import { StatusBar } from 'expo-status-bar';
 import { Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -24,6 +25,7 @@ export default function RootLayout() {
 
   return (
     <SafeAreaProvider>
+      <StatusBar style="light" animated={false} />
       <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
     </SafeAreaProvider>
   );

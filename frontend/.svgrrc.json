@@ -1,0 +1,7 @@
+{
+  "svgo": false,
+  "replaceAttrValues": {
+    "white": "currentColor",
+    "#FAFEFF": "currentColor"
+  }
+}

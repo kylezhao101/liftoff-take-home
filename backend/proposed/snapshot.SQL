@@ -9,7 +9,8 @@ SELECT
 FROM "User" u
 JOIN "AverageRanks" ar
     ON ar."userId" = u.id
-LEFT JOIN "TimeZoneContinent" tz -- Assumes one continent mapping per timezone
+    AND ar.season = 1 -- Assumes season 1 is the current season. In a real implementation this wouldn't be hardcoded
+LEFT JOIN "TimeZoneContinent" tz 
     ON tz."timeZone" = u."timeZone"
 WHERE
     u."experiencePoints" >= 8650 -- Minimum XP to appear on leaderboard

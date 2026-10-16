@@ -70,8 +70,7 @@ src/
   utils/            money formatting and cent-based cart totals
 ```
 
-See [the export guide](assets/README.md) before exporting assets. Empty source
-folders contain `.gitkeep` so they survive version control.
+See [the export guide](assets/README.md) before exporting assets.
 
 ## Assumptions
 

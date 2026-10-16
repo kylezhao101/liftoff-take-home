@@ -1,5 +1,5 @@
 import { router } from "expo-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 
 import { CartLineItem } from "../components/cart/CartLineItem";
@@ -31,6 +31,16 @@ export default function ShoppingCartScreen() {
   const totals = calculateCartTotals(cartItems, products, appliedPromoCode);
   const goBack = () =>
     router.canGoBack() ? router.back() : router.replace("/");
+
+  const checkoutResetToken = useMemo(
+    () => ({ cartItems, appliedPromoCode }),
+    [cartItems, appliedPromoCode],
+  );
+  const handleApplyPromo = () => {
+    setPromoMessage(
+      applyPromoCode(promoInput) ? "Bike30 applied" : "Invalid promo code",
+    );
+  };
 
   return (
     <Screen style={styles.screen}>
@@ -104,13 +114,7 @@ export default function ShoppingCartScreen() {
                 setPromoInput(value);
                 setPromoMessage("");
               }}
-              onSubmitEditing={() =>
-                setPromoMessage(
-                  applyPromoCode(promoInput)
-                    ? "Bike30 applied"
-                    : "Invalid promo code",
-                )
-              }
+              onSubmitEditing={handleApplyPromo}
               placeholder="Promo code"
               placeholderTextColor={tokens.cart.promoTextColor}
               containerStyle={styles.promoInput}
@@ -118,13 +122,7 @@ export default function ShoppingCartScreen() {
             />
             <GradientButton
               label="Apply"
-              onPress={() =>
-                setPromoMessage(
-                  applyPromoCode(promoInput)
-                    ? "Bike30 applied"
-                    : "Invalid promo code",
-                )
-              }
+              onPress={handleApplyPromo}
               style={styles.apply}
             />
           </View>
@@ -164,7 +162,7 @@ export default function ShoppingCartScreen() {
             />
           </View>
           <CheckoutSlider
-            key={JSON.stringify([cartItems, appliedPromoCode])}
+            resetToken={checkoutResetToken}
             disabled={totals.itemCount === 0}
           />
         </View>

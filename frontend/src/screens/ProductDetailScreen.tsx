@@ -1,7 +1,8 @@
+import { ProductDetailHero } from "../components/products/detail/ProductDetailHero";
+import { ProductDetailFooter } from "../components/products/detail/ProductDetailFooter";
 import { router, useLocalSearchParams } from "expo-router";
 import { useState } from "react";
 import {
-  Image,
   ScrollView,
   StyleSheet,
   View,
@@ -13,15 +14,15 @@ import { BikeSharePanel } from "../components/products/detail/BikeSharePanel";
 import { DetailBackdrop } from "../components/products/backdrop/DetailBackdrop";
 import { DetailSheetSurface } from "../components/products/detail/DetailSheetSurface";
 import { AppText } from "../components/ui/AppText";
-import { GradientBezel } from "../components/ui/surfaces/GradientBezel";
 import { GradientButton } from "../components/ui/controls/GradientButton";
-import { Icon } from "../components/ui/Icon";
 import { Screen } from "../components/ui/Screen";
-import { TabSwitcher, type TabOption } from "../components/ui/controls/TabSwitcher";
+import {
+  TabSwitcher,
+  type TabOption,
+} from "../components/ui/controls/TabSwitcher";
 import { getProduct } from "../config/products";
 import { useShopStore } from "../store/shop-store";
 import { tokens } from "../theme/tokens";
-import { formatMoney } from "../utils/money";
 
 type DetailTab = "description" | "specification";
 const tabs: readonly TabOption<DetailTab>[] = [
@@ -37,8 +38,6 @@ export default function ProductDetailScreen() {
 
 function ProductDetail({ id }: { id: string }) {
   const product = getProduct(id);
-  const imageShadow = product?.image.shadow;
-  const detailShadow = imageShadow?.detail;
   const { width, height } = useWindowDimensions();
   const insets = useSafeAreaInsets();
   const [tab, setTab] = useState<DetailTab>("description");
@@ -84,94 +83,13 @@ function ProductDetail({ id }: { id: string }) {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
-          <View
-            style={[
-              styles.hero,
-              { height: Math.max(280, heroHeight - insets.top) },
-            ]}
-          >
-            {detailShadow && imageShadow && (
-              <Image
-                testID={`product-detail-shadow-${product.id}`}
-                accessibilityElementsHidden={true}
-                importantForAccessibility="no"
-                source={imageShadow.source}
-                resizeMode="contain"
-                style={[
-                  styles.imageShadow,
-                  {
-                    left:
-                      (width -
-                        (detailShadow.width * width) /
-                          detailShadow.referenceWidth) /
-                      2,
-                    top:
-                      (detailShadow.top * width) / detailShadow.referenceWidth -
-                      insets.top,
-                    width:
-                      (detailShadow.width * width) /
-                      detailShadow.referenceWidth,
-                    height:
-                      (detailShadow.height * width) /
-                      detailShadow.referenceWidth,
-                  },
-                ]}
-              />
-            )}
-            <View className="flex-row items-center" style={styles.header}>
-              <GradientButton
-                accessibilityLabel="Back to bikes"
-                onPress={goBack}
-                style={styles.backButton}
-              >
-                <Icon
-                  name="chevron-left"
-                  width={tokens.sizes.icon}
-                  height={tokens.sizes.icon}
-                />
-              </GradientButton>
-              <AppText
-                accessibilityRole="header"
-                weight="bold"
-                style={styles.title}
-              >
-                {product.name}
-              </AppText>
-              <View style={styles.headerBalance} />
-            </View>
-            <View style={styles.imageFrame}>
-              <Image
-                accessibilityLabel={product.name}
-                source={product.image.source}
-                resizeMode="contain"
-                style={[
-                  styles.image,
-                  product.image.detailOffsetY !== undefined && {
-                    transform: [
-                      {
-                        translateY:
-                          (product.image.detailOffsetY * width) /
-                          (detailShadow?.referenceWidth ??
-                            tokens.detail.referenceWidth),
-                      },
-                    ],
-                  },
-                ]}
-              />
-            </View>
-            <View
-              accessibilityLabel="Product image 1 of 1"
-              style={styles.pager}
-            >
-              {[0, 1, 2].map((index) => (
-                <View
-                  key={index}
-                  aria-hidden={true}
-                  style={[styles.dot, index > 0 && styles.inactiveDot]}
-                />
-              ))}
-            </View>
-          </View>
+          <ProductDetailHero
+            product={product}
+            width={width}
+            heroHeight={heroHeight}
+            topInset={insets.top}
+            onBack={goBack}
+          />
           <View
             testID="detail-sheet"
             style={[
@@ -212,52 +130,19 @@ function ProductDetail({ id }: { id: string }) {
           </View>
         </ScrollView>
       </Screen>
-      <View
-        testID="detail-footer"
+      <ProductDetailFooter
+        priceCents={product.priceCents}
+        quantity={quantity}
+        added={added}
+        insets={insets}
+        onAddToCart={() => {
+          addToCart(product.id);
+          setAdded(true);
+        }}
         onLayout={({ nativeEvent: { layout } }) => {
           if (layout.height !== footerHeight) setFooterHeight(layout.height);
         }}
-        style={[
-          styles.footer,
-          {
-            minHeight: tokens.detail.footerMinHeight + insets.bottom,
-            paddingBottom: tokens.spacing.xl + insets.bottom,
-            paddingLeft: tokens.spacing.xxl + insets.left,
-            paddingRight: tokens.spacing.xxl + insets.right,
-          },
-        ]}
-      >
-        <View
-          pointerEvents="none"
-          testID="detail-footer-surface"
-          style={[StyleSheet.absoluteFill, styles.footerSurface]}
-        >
-          <GradientBezel
-            radius={tokens.detail.footerRadius}
-            borderWidth={tokens.bezel.borderWidth}
-            border={tokens.detail.footerBorder}
-            blendMode={tokens.detail.footerBorderBlendMode}
-          />
-        </View>
-        <View className="flex-row items-center" style={styles.footerRow}>
-          <AppText testID="detail-price" style={styles.price}>
-            {formatMoney(product.priceCents)}
-          </AppText>
-          <GradientButton
-            label="Add to Cart"
-            onPress={() => {
-              addToCart(product.id);
-              setAdded(true);
-            }}
-            style={styles.addButton}
-          />
-        </View>
-        {added && (
-          <AppText accessibilityLiveRegion="polite" style={styles.confirmation}>
-            Added to cart · {quantity} {quantity === 1 ? "item" : "items"}
-          </AppText>
-        )}
-      </View>
+      />
     </View>
   );
 }
@@ -266,38 +151,6 @@ const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: tokens.colors.background },
   scroll: { flex: 1 },
   scrollContent: { flexGrow: 1 },
-  hero: { paddingTop: tokens.spacing.lg },
-  header: { paddingHorizontal: tokens.spacing.gutter, gap: tokens.spacing.sm },
-  backButton: { width: tokens.sizes.control, paddingHorizontal: 0 },
-  headerBalance: { width: tokens.sizes.control },
-  title: {
-    flex: 1,
-    textAlign: "center",
-    fontSize: tokens.typography.size.title,
-    lineHeight: tokens.typography.lineHeight.title,
-  },
-  imageFrame: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingTop: tokens.spacing.xl,
-  },
-  image: { width: tokens.detail.imageWidth, height: "90%" },
-  imageShadow: { position: "absolute" },
-  pager: {
-    flexDirection: "row",
-    justifyContent: "center",
-    gap: tokens.detail.pagerGap,
-    paddingTop: tokens.spacing.md,
-    paddingBottom: tokens.detail.pagerBottom,
-  },
-  dot: {
-    width: tokens.detail.pagerDot,
-    height: tokens.detail.pagerDot,
-    borderRadius: tokens.detail.pagerDot / 2,
-    backgroundColor: tokens.colors.text,
-  },
-  inactiveDot: { opacity: 0.3 },
   sheet: {
     flexGrow: 1,
     minHeight: tokens.detail.sheetMinHeight,
@@ -320,43 +173,6 @@ const styles = StyleSheet.create({
   },
   muted: { color: tokens.colors.muted },
   hidden: { display: "none" },
-  footer: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 2,
-    justifyContent: "center",
-    minHeight: tokens.detail.footerMinHeight,
-    borderTopLeftRadius: tokens.detail.footerRadius,
-    borderTopRightRadius: tokens.detail.footerRadius,
-    paddingTop: tokens.spacing.xl,
-    backgroundColor: "transparent",
-  },
-  footerRow: { gap: tokens.spacing.gutter, justifyContent: "space-between" },
-  footerSurface: {
-    borderRadius: tokens.detail.footerRadius,
-    backgroundColor: tokens.detail.footerBackground,
-  },
-  price: {
-    flexShrink: 1,
-    color: tokens.colors.accent,
-    fontSize: tokens.typography.size.price,
-    lineHeight: tokens.typography.lineHeight.price,
-  },
-  addButton: {
-    flex: 1,
-    maxWidth: "50%",
-    minWidth: 0,
-    paddingHorizontal: tokens.spacing.sm,
-  },
-  confirmation: {
-    textAlign: "right",
-    color: tokens.colors.muted,
-    fontSize: tokens.typography.size.caption,
-    lineHeight: tokens.typography.lineHeight.caption,
-    paddingTop: tokens.spacing.xs,
-  },
   missing: {
     flex: 1,
     justifyContent: "center",

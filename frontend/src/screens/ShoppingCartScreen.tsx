@@ -4,13 +4,13 @@ import { ScrollView, StyleSheet, View } from "react-native";
 
 import { CartLineItem } from "../components/cart/CartLineItem";
 import { AppText } from "../components/ui/AppText";
-import { Button } from "../components/ui/Button";
-import { GradientBezel } from "../components/ui/GradientBezel";
-import { GradientButton } from "../components/ui/GradientButton";
+import { Button } from "../components/ui/controls/Button";
+import { CheckoutSlider } from "../components/cart/CheckoutSlider";
+import { GradientButton } from "../components/ui/controls/GradientButton";
 import { Icon } from "../components/ui/Icon";
 import { PriceRow } from "../components/ui/PriceRow";
 import { Screen } from "../components/ui/Screen";
-import { TextField } from "../components/ui/TextField";
+import { TextField } from "../components/ui/controls/TextField";
 import { getProduct, products } from "../config/products";
 import { useShopStore } from "../store/shop-store";
 import { tokens } from "../theme/tokens";
@@ -28,7 +28,6 @@ export default function ShoppingCartScreen() {
   const applyPromoCode = useShopStore((state) => state.applyPromoCode);
   const [promoInput, setPromoInput] = useState("Bike30");
   const [promoMessage, setPromoMessage] = useState("");
-  const [checkoutMessage, setCheckoutMessage] = useState("");
   const totals = calculateCartTotals(cartItems, products, appliedPromoCode);
   const goBack = () =>
     router.canGoBack() ? router.back() : router.replace("/");
@@ -164,40 +163,10 @@ export default function ShoppingCartScreen() {
               style={styles.total}
             />
           </View>
-          <Button
-            variant="plain"
-            accessibilityLabel="Checkout"
+          <CheckoutSlider
+            key={JSON.stringify([cartItems, appliedPromoCode])}
             disabled={totals.itemCount === 0}
-            onPress={() =>
-              setCheckoutMessage("Checkout is not available in this demo.")
-            }
-            style={styles.checkout}
-          >
-            <View style={styles.checkoutArrow}>
-              <GradientBezel
-                radius={tokens.radii.control}
-                borderWidth={tokens.bezel.borderWidth}
-                fill={tokens.bezel.active}
-                border={tokens.bezel.border}
-              />
-              <View pointerEvents="none" style={styles.checkoutIcon}>
-                <Icon
-                  name="chevron-right"
-                  width={tokens.sizes.icon}
-                  height={tokens.sizes.icon}
-                />
-              </View>
-            </View>
-            <AppText style={styles.checkoutText}>Checkout</AppText>
-          </Button>
-          {!!checkoutMessage && (
-            <AppText
-              accessibilityLiveRegion="polite"
-              style={styles.checkoutMessage}
-            >
-              {checkoutMessage}
-            </AppText>
-          )}
+          />
         </View>
       </ScrollView>
     </Screen>
@@ -256,37 +225,4 @@ const styles = StyleSheet.create({
   error: { color: tokens.colors.error },
   prices: { gap: tokens.spacing.sm, paddingTop: tokens.spacing.lg },
   total: { paddingTop: tokens.spacing.sm },
-  checkout: {
-    flexDirection: "row",
-    alignSelf: "center",
-    alignItems: "center",
-    height: tokens.sizes.control,
-    marginTop: tokens.spacing.xl,
-    paddingHorizontal: 0,
-    paddingVertical: 0,
-    minWidth: 172,
-    backgroundColor: tokens.colors.deep,
-    boxShadow: tokens.shadows.inset,
-  },
-  checkoutArrow: {
-    width: tokens.sizes.control,
-    height: tokens.sizes.control,
-    borderRadius: tokens.radii.control,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-  checkoutIcon: { zIndex: 1 },
-  checkoutText: {
-    color: tokens.colors.muted,
-    flex: 1,
-    textAlign: "center",
-    paddingHorizontal: tokens.spacing.md,
-  },
-  checkoutMessage: {
-    color: tokens.colors.muted,
-    textAlign: "center",
-    fontSize: tokens.typography.size.caption,
-    marginTop: tokens.spacing.sm,
-  },
 });

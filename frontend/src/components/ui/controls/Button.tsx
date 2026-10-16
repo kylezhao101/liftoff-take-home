@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import {
   Pressable,
   StyleSheet,
@@ -7,16 +7,25 @@ import {
   type StyleProp,
   type ViewStyle,
 } from "react-native";
+import Animated, {
+  Easing,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
-import { tokens } from "../../theme/tokens";
-import { AppText } from "./AppText";
-import { GradientBezel } from "./GradientBezel";
+import { tokens } from "../../../theme/tokens";
+import { AppText } from "../AppText";
+import { GradientBezel } from "../surfaces/GradientBezel";
+
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
 export type ButtonProps = Omit<PressableProps, "children" | "style"> & {
   label?: string;
   children?: ReactNode;
   loading?: boolean;
   variant?: "surface" | "accent" | "plain";
+  shrinkOnPress?: boolean;
   insetShadow?: string;
   bezelRadius?: number;
   bezelWidth?: number;
@@ -29,14 +38,27 @@ export function Button({
   loading = false,
   disabled = false,
   variant = "surface",
+  shrinkOnPress = variant === "accent",
   style,
   insetShadow,
   bezelRadius = tokens.radii.control,
   bezelWidth = tokens.bezel.borderWidth,
   accessibilityState,
   accessibilityLabel = label,
+  onPressIn,
+  onPressOut,
   ...props
 }: ButtonProps) {
+  const scale = useSharedValue(1);
+  const blocked = disabled || loading;
+  const pressStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.get() }],
+  }));
+
+  useEffect(() => {
+    if (blocked || !shrinkOnPress) scale.set(1);
+  }, [blocked, shrinkOnPress, scale]);
+
   const content = loading ? (
     <AppText weight="medium" style={styles.label}>
       Loading…
@@ -49,7 +71,7 @@ export function Button({
     ))
   );
   return (
-    <Pressable
+    <AnimatedPressable
       {...props}
       accessibilityRole={props.accessibilityRole ?? "button"}
       accessibilityLabel={accessibilityLabel}
@@ -62,11 +84,30 @@ export function Button({
       aria-busy={loading || accessibilityState?.busy}
       aria-selected={props["aria-selected"] ?? accessibilityState?.selected}
       disabled={disabled || loading}
+      onPressIn={(event) => {
+        if (shrinkOnPress && !blocked) {
+          scale.set(withTiming(tokens.motion.accentPress.scale, {
+            duration: tokens.motion.accentPress.pressDuration,
+            easing: Easing.out(Easing.quad),
+          }));
+        }
+        onPressIn?.(event);
+      }}
+      onPressOut={(event) => {
+        if (shrinkOnPress) {
+          scale.set(withTiming(1, {
+            duration: tokens.motion.accentPress.releaseDuration,
+            easing: Easing.out(Easing.quad),
+          }));
+        }
+        onPressOut?.(event);
+      }}
       style={[
         styles.base,
         variant !== "plain" && styles.surface,
         (disabled || loading) && styles.disabled,
         style,
+        shrinkOnPress && pressStyle,
       ]}
     >
       {variant !== "plain" && (
@@ -96,7 +137,7 @@ export function Button({
           {content}
         </View>
       )}
-    </Pressable>
+    </AnimatedPressable>
   );
 }
 

@@ -1,15 +1,15 @@
 import { Link } from "expo-router";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 
-import { categoryLabels } from "../../config/products";
-import { useShopStore } from "../../store/shop-store";
-import { tokens } from "../../theme/tokens";
-import type { Product } from "../../types/product";
-import { formatMoney } from "../../utils/money";
-import { AppText } from "../ui/AppText";
-import { Button } from "../ui/Button";
-import { Card } from "../ui/Card";
-import { FavoriteIcon } from "./FavoriteIcon";
+import { categoryLabels } from "../../../config/products";
+import { useShopStore } from "../../../store/shop-store";
+import { tokens } from "../../../theme/tokens";
+import type { Product } from "../../../types/product";
+import { formatMoney } from "../../../utils/money";
+import { AppText } from "../../ui/AppText";
+import { Button } from "../../ui/controls/Button";
+import { Card } from "../../ui/surfaces/Card";
+import { FavoriteIcon } from "../FavoriteIcon";
 
 export function ProductCard({ product }: { product: Product }) {
   const favorite = useShopStore((state) =>

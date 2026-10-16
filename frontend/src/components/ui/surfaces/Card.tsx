@@ -1,9 +1,9 @@
 import { StyleSheet, View, type ViewProps, type StyleProp, type ViewStyle } from 'react-native';
 
-import { tokens } from '../../theme/tokens';
-import type { GradientSpec } from '../../utils/gradient';
+import { tokens } from '../../../theme/tokens';
+import type { GradientSpec } from '../../../utils/gradient';
 import { GradientBezel } from './GradientBezel';
-import { GlassBlur } from './GlassBlur';
+import { GlassBlur } from './glass/GlassBlur';
 import { GradientSilhouette } from './GradientSilhouette';
 
 type CardProps = ViewProps & {

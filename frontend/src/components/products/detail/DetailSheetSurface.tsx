@@ -1,5 +1,5 @@
-import { tokens } from '../../theme/tokens';
-import { GradientBezel } from '../ui/GradientBezel';
+import { tokens } from '../../../theme/tokens';
+import { GradientBezel } from '../../ui/surfaces/GradientBezel';
 
 export function DetailSheetSurface() {
   return <GradientBezel

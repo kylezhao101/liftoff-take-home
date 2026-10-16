@@ -4,8 +4,8 @@ import { tokens } from "../../theme/tokens";
 import type { Product } from "../../types/product";
 import { formatMoney } from "../../utils/money";
 import { AppText } from "../ui/AppText";
-import { GradientBezel } from "../ui/GradientBezel";
-import { QuantityStepper } from "../ui/QuantityStepper";
+import { GradientBezel } from "../ui/surfaces/GradientBezel";
+import { QuantityStepper } from "../ui/controls/QuantityStepper";
 
 type Props = {
   product: Product;

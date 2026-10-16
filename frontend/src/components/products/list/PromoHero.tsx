@@ -1,9 +1,9 @@
 import { Image, StyleSheet, View } from 'react-native';
 
-import { promoImages } from '../../assets/catalog';
-import { tokens } from '../../theme/tokens';
-import { AppText } from '../ui/AppText';
-import { Card } from '../ui/Card';
+import { promoImages } from '../../../assets/catalog';
+import { tokens } from '../../../theme/tokens';
+import { AppText } from '../../ui/AppText';
+import { Card } from '../../ui/surfaces/Card';
 
 export function PromoHero() {
   return (

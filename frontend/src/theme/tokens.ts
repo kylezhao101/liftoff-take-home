@@ -125,6 +125,7 @@ export const tokens = {
     sheetTabInset: 24,
   },
   cart: {
+    checkoutWidth: 172,
     promoTextColor: "rgba(255, 255, 255, 0.6)",
     previewFill: {
       angle: 322.57,
@@ -194,8 +195,16 @@ export const tokens = {
     tabInactive:
       "inset 4px 4px 8px 0px #202633, inset -4px -4px 8px 0px #364055",
   },
-  // Timings and easing will be specified and implemented in stage (e).
-  motion: {},
+  motion: {
+    checkout: { settleDuration: 160, completionThreshold: 0.9 },
+    skeuomorphicTransitionDuration: 100,
+    accentPress: {
+      // Estimated from the pressed Add to Cart example in figma/MOTION.png.
+      scale: 0.82,
+      pressDuration: 100,
+      releaseDuration: 160,
+    },
+  },
 } as const;
 
 export const layoutTargets = { compact: 375, large: 440 } as const;

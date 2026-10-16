@@ -1,11 +1,11 @@
 import { StyleSheet, View } from "react-native";
 
-import { tokens } from "../../theme/tokens";
-import { AppText } from "./AppText";
+import { tokens } from "../../../theme/tokens";
+import { AppText } from "../AppText";
 import { Button } from "./Button";
 import { GradientButton } from "./GradientButton";
-import { Icon } from "./Icon";
-import { GradientBezel } from "./GradientBezel";
+import { Icon } from "../Icon";
+import { GradientBezel } from "../surfaces/GradientBezel";
 
 type QuantityStepperProps = {
   value: number;

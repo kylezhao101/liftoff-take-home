@@ -1,9 +1,9 @@
 import { StyleSheet, View } from 'react-native';
 
-import type { IconName } from '../../assets/icons';
-import { tokens } from '../../theme/tokens';
-import type { ProductFilter } from '../../types/product';
-import { Chip } from '../ui/Chip';
+import type { IconName } from '../../../assets/icons';
+import { tokens } from '../../../theme/tokens';
+import type { ProductFilter } from '../../../types/product';
+import { Chip } from '../../ui/controls/Chip';
 
 const filters: readonly { value: ProductFilter; label: string; icon?: IconName }[] = [
   { value: 'all', label: 'All' },

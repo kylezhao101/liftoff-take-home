@@ -2,9 +2,9 @@ import { useId, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Defs, FeGaussianBlur, FeOffset, Filter, Path } from 'react-native-svg';
 
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../../theme/tokens';
 import { GradientDefinition } from './GradientBezel';
-import { ShapedGlassBlur } from './ShapedGlassBlur';
+import { ShapedGlassBlur } from './glass/ShapedGlassBlur';
 
 type GradientSilhouetteProps = { shape: 'hero' | 'navigation'; glass?: boolean };
 

@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput, View, type TextInputProps, type StyleProp, type ViewStyle } from 'react-native';
 
-import { fontFamilies } from '../../theme/fonts';
-import { tokens } from '../../theme/tokens';
+import { fontFamilies } from '../../../theme/fonts';
+import { tokens } from '../../../theme/tokens';
 
 type TextFieldProps = TextInputProps & { containerStyle?: StyleProp<ViewStyle> };
 

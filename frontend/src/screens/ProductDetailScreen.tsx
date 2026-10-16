@@ -9,15 +9,15 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { BikeSharePanel } from "../components/products/BikeSharePanel";
-import { DetailBackdrop } from "../components/products/DetailBackdrop";
-import { DetailSheetSurface } from "../components/products/DetailSheetSurface";
+import { BikeSharePanel } from "../components/products/detail/BikeSharePanel";
+import { DetailBackdrop } from "../components/products/backdrop/DetailBackdrop";
+import { DetailSheetSurface } from "../components/products/detail/DetailSheetSurface";
 import { AppText } from "../components/ui/AppText";
-import { GradientBezel } from "../components/ui/GradientBezel";
-import { GradientButton } from "../components/ui/GradientButton";
+import { GradientBezel } from "../components/ui/surfaces/GradientBezel";
+import { GradientButton } from "../components/ui/controls/GradientButton";
 import { Icon } from "../components/ui/Icon";
 import { Screen } from "../components/ui/Screen";
-import { TabSwitcher, type TabOption } from "../components/ui/TabSwitcher";
+import { TabSwitcher, type TabOption } from "../components/ui/controls/TabSwitcher";
 import { getProduct } from "../config/products";
 import { useShopStore } from "../store/shop-store";
 import { tokens } from "../theme/tokens";

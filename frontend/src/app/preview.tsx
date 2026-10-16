@@ -6,7 +6,7 @@ import { iconNames } from "../assets/icons";
 import { Icon } from "../components/ui/Icon";
 import { AppText } from "../components/ui/AppText";
 import { ComponentPreview } from "../components/ComponentPreview";
-import { Card } from "../components/ui/Card";
+import { Card } from "../components/ui/surfaces/Card";
 import { Screen } from "../components/ui/Screen";
 import { tokens } from "../theme/tokens";
 

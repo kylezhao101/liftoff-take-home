@@ -1,7 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 
-import { tokens } from '../../theme/tokens';
-import type { Product } from '../../types/product';
+import { tokens } from '../../../theme/tokens';
+import type { Product } from '../../../types/product';
 import { ProductCard } from './ProductCard';
 
 export function ProductGrid({ products }: { products: readonly Product[] }) {

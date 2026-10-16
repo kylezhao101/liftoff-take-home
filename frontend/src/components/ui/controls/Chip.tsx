@@ -1,11 +1,11 @@
 import { StyleSheet, View } from 'react-native';
 
 import { Button } from './Button';
-import { AppText } from './AppText';
-import { GradientBezel } from './GradientBezel';
-import { Icon } from './Icon';
-import type { IconName } from '../../assets/icons';
-import { tokens } from '../../theme/tokens';
+import { AppText } from '../AppText';
+import { GradientBezel } from '../surfaces/GradientBezel';
+import { Icon } from '../Icon';
+import type { IconName } from '../../../assets/icons';
+import { tokens } from '../../../theme/tokens';
 
 type ChipProps = {
   label: string;
@@ -20,7 +20,7 @@ export function Chip({ label, selected, onPress, icon, fluid = false }: ChipProp
   return (
     <Button
       label={label} onPress={onPress} accessibilityLabel={label}
-      accessibilityState={{ selected }} variant="plain" style={[styles.chip, fluid ? styles.fluid : styles.fixed]}
+      accessibilityState={{ selected }} variant="plain" shrinkOnPress={selected} style={[styles.chip, fluid ? styles.fluid : styles.fixed]}
     >
       <GradientBezel
         size={fluid ? undefined : tokens.sizes.control} radius={tokens.radii.control}

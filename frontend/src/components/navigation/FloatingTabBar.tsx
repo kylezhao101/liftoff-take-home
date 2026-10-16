@@ -4,9 +4,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import type { IconName } from "../../assets/icons";
 import { tokens } from "../../theme/tokens";
-import { Button } from "../ui/Button";
-import { GradientBezel } from "../ui/GradientBezel";
-import { GradientSilhouette } from "../ui/GradientSilhouette";
+import { Button } from "../ui/controls/Button";
+import { GradientBezel } from "../ui/surfaces/GradientBezel";
+import { GradientSilhouette } from "../ui/surfaces/GradientSilhouette";
 import { Icon } from "../ui/Icon";
 
 const pendingTabs: readonly { label: string; icon: IconName }[] = [

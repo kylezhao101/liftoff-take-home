@@ -1,12 +1,13 @@
 import '../../global.css';
 
-import { Stack } from 'expo-router';
 import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { Text, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { fontAssets } from '../theme/fonts';
+import { NavigationStack } from '../components/navigation/NavigationStack';
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts(fontAssets);
@@ -24,9 +25,11 @@ export default function RootLayout() {
   }
 
   return (
-    <SafeAreaProvider>
-      <StatusBar style="light" animated={false} />
-      <Stack screenOptions={{ headerShown: false, animation: 'none' }} />
-    </SafeAreaProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <StatusBar style="light" animated={false} />
+        <NavigationStack />
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

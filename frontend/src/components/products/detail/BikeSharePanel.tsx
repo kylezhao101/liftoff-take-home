@@ -1,10 +1,10 @@
 import { Link } from 'expo-router';
 import { StyleSheet, View } from 'react-native';
 
-import { useBikeShare } from '../../hooks/use-bike-share';
-import { tokens } from '../../theme/tokens';
-import { AppText } from '../ui/AppText';
-import { Button } from '../ui/Button';
+import { useBikeShare } from '../../../hooks/use-bike-share';
+import { tokens } from '../../../theme/tokens';
+import { AppText } from '../../ui/AppText';
+import { Button } from '../../ui/controls/Button';
 
 export function BikeSharePanel({ enabled }: { enabled: boolean }) {
   const { state, retry } = useBikeShare(enabled);

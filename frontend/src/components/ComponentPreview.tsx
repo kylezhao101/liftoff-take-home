@@ -4,15 +4,15 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { tokens } from '../theme/tokens';
 import { formatMoney } from '../utils/money';
 import { AppText } from './ui/AppText';
-import { Button } from './ui/Button';
-import { Card } from './ui/Card';
-import { Chip } from './ui/Chip';
-import { GradientButton } from './ui/GradientButton';
+import { Button } from './ui/controls/Button';
+import { Card } from './ui/surfaces/Card';
+import { Chip } from './ui/controls/Chip';
+import { GradientButton } from './ui/controls/GradientButton';
 import { Icon } from './ui/Icon';
 import { PriceRow } from './ui/PriceRow';
-import { QuantityStepper } from './ui/QuantityStepper';
-import { TabSwitcher } from './ui/TabSwitcher';
-import { TextField } from './ui/TextField';
+import { QuantityStepper } from './ui/controls/QuantityStepper';
+import { TabSwitcher } from './ui/controls/TabSwitcher';
+import { TextField } from './ui/controls/TextField';
 
 const tabs = [
   { value: 'description', label: 'Description' },

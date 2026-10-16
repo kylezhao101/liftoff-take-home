@@ -1,6 +1,6 @@
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../../../theme/tokens';
 
 type ShapedGlassBlurProps = { path: string; width: number; height: number };
 

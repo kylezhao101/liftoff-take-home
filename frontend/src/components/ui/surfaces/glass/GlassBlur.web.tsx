@@ -1,6 +1,6 @@
 import { View, type ViewStyle } from 'react-native';
 
-import { tokens } from '../../theme/tokens';
+import { tokens } from '../../../../theme/tokens';
 
 // CSS-only properties are kept in the web implementation, outside native styles.
 const glassStyle: ViewStyle & { backdropFilter: string; WebkitBackdropFilter: string } = {

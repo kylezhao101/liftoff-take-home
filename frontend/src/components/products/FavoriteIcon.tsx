@@ -2,7 +2,7 @@ import { useId } from 'react';
 import Svg, { Defs, Mask, Rect } from 'react-native-svg';
 
 import { tokens } from '../../theme/tokens';
-import { GradientDefinition } from '../ui/GradientBezel';
+import { GradientDefinition } from '../ui/surfaces/GradientBezel';
 import { Icon } from '../ui/Icon';
 
 export function FavoriteIcon({ selected }: { selected: boolean }) {

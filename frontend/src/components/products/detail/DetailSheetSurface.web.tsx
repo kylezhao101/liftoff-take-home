@@ -1,7 +1,7 @@
 import { View, type ViewStyle } from 'react-native';
 
-import { tokens } from '../../theme/tokens';
-import type { GradientSpec } from '../../utils/gradient';
+import { tokens } from '../../../theme/tokens';
+import type { GradientSpec } from '../../../utils/gradient';
 
 const cssGradient = ({ angle, stops }: GradientSpec) =>
   `linear-gradient(${angle}deg, ${stops.map(stop => `${stop.color} ${stop.offset * 100}%`).join(', ')})`;

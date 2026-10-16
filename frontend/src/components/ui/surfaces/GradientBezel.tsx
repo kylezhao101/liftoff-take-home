@@ -2,8 +2,8 @@ import { useId, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import Svg, { Defs, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 
-import { tokens } from '../../theme/tokens';
-import { cssGradientToSvg, type GradientSpec } from '../../utils/gradient';
+import { tokens } from '../../../theme/tokens';
+import { cssGradientToSvg, type GradientSpec } from '../../../utils/gradient';
 
 type GradientBezelProps = {
   size?: number;

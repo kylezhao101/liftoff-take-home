@@ -9,11 +9,12 @@ SELECT
 FROM "User" u
 JOIN "AverageRanks" ar
     ON ar."userId" = u.id
-LEFT JOIN "TimeZoneContinent" tz
+LEFT JOIN "TimeZoneContinent" tz -- Assumes one continent mapping per timezone
     ON tz."timeZone" = u."timeZone"
 WHERE
     u."experiencePoints" >= 8650 -- Minimum XP to appear on leaderboard
     AND u.status = '-'
+    AND ar."totalRating" IS NOT NULL
 GROUP BY u.id, tz.continent;
 
 CREATE UNIQUE INDEX leaderboard_user_snapshot_pk
@@ -51,7 +52,7 @@ score_counts AS (
         score,
         COUNT(*)::bigint AS count
     FROM scoped_scores
-    GROUP BY scope, "scopeKey", score
+    GROUP BY scope, "scopeKey", score -- potentially very large
 )
 SELECT
     scope,
@@ -76,8 +77,23 @@ ON "LeaderboardScoreSnapshot" (
     scope, "scopeKey", score
 );
 
-CREATE INDEX leaderboard_score_lookup_idx
-ON "LeaderboardScoreSnapshot" (
-    scope, "scopeKey", score
-)
-INCLUDE ("usersAtOrAbove");
+-- CREATE INDEX leaderboard_score_lookup_idx
+-- ON "LeaderboardScoreSnapshot" (
+--     scope, "scopeKey", score
+-- )
+-- INCLUDE ("usersAtOrAbove");
+
+----------------------------------------------------------------------------
+
+-- scheduled every 5 mins via cron job
+-- both views are refreshed in a single transaction to ensure consistency
+
+BEGIN;
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY
+    "LeaderboardUserSnapshot";
+
+REFRESH MATERIALIZED VIEW CONCURRENTLY
+    "LeaderboardScoreSnapshot";
+
+COMMIT;

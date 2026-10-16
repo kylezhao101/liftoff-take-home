@@ -1,9 +1,13 @@
 # Liftoff Take Home
 
-The Expo mobile project is in [`frontend`](frontend/README.md).
+Frontend - Expo React Native mobile application.
 
-Export Figma images and icons into [`frontend/assets`](frontend/assets/README.md).
-That guide lists folders, expected filenames, and export settings.
+Backend - Backend optimization proposal and example implementation.
 
-`figma/` holds the provided design and motion references. Existing backend files
-are preserved; the mobile scaffold does not connect to a backend yet.
+Figma - Provided design assets and motion references.
+
+# AI usage
+
+I used ChatGPT for the backend proposal process, and Codex for the frontend implementation.
+
+Codex sessions were exported via https://github.com/MeXenon/codex-session-export.

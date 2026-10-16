@@ -1,0 +1,27 @@
+model User {
+  id                String                @id @default(cuid())
+  experiencePoints  Int                   @default(0)
+  timeZone          String                @default("UTC")
+  status            String                @default("-") // "-" = active
+  averageRanks      AverageRanks[]
+  exercisePeakRanks ExercisePeakRanking[]
+}
+
+model AverageRanks {
+  id          String @id @default(cuid())
+  userId      String
+  user        User   @relation(fields: [userId], references: [id])
+  totalRating Float  @default(0) // Combined Skill Rating (CSR)
+  season      Int
+
+  @@unique([userId, season])
+  @@index([totalRating, userId])
+}
+
+model ExercisePeakRanking {
+  id             String @id @default(cuid())
+  userId         String
+  exerciseId     String
+  exerciseRating Int    @default(0)
+  user           User   @relation(fields: [userId], references: [id])
+}

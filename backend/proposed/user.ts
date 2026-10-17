@@ -19,7 +19,10 @@ getSelfForLeaderboardByMainRank: protectedProcedure
             select: {
                 timeZone: true,
                 experiencePoints: true,
-                averageRanks: { select: { totalRating: true } },
+                averageRanks: {
+                    where: { season: 1 }, // assuming season 1 is the current season
+                    select: { totalRating: true },
+                },
             },
         });
 
@@ -38,10 +41,10 @@ getSelfForLeaderboardByMainRank: protectedProcedure
 
         // assuming the materialized view are defined in Prisma
 
-        const [scoreRow, userSnapshot, totalRow] = await Promise.all([
+        const [scoreRow, userSnapshot, totalRow] = await ctx.prisma.$transaction([
 
             // fetch the number of users above the current user in the snapshot
-            ctx.prisma.leaderboardUserSnapshot.findFirst({
+            ctx.prisma.leaderboardScoreSnapshot.findFirst({
                 where: {
                     scope: scopeName,
                     scopeKey: scopeKey,
@@ -59,7 +62,7 @@ getSelfForLeaderboardByMainRank: protectedProcedure
             }),
 
             // fetch the total number of eligible users in the snapshot
-            ctx.prisma.leaderboardUserSnapshot.findFirst({
+            ctx.prisma.leaderboardScoreSnapshot.findFirst({
                 where: {
                     scope: "global",
                     scopeKey: "all",
@@ -69,7 +72,7 @@ getSelfForLeaderboardByMainRank: protectedProcedure
             }),
         ]);
 
-        const usersAbove = scoreRow?.usersAtOrAbove ?? 0;
+        let usersAbove = Number(scoreRow?.usersAtOrAbove ?? 0n);
 
         // adjust the user's standing if the snapshot score is higher than the live score
         if (

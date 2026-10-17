@@ -67,8 +67,11 @@ SELECT
                  AND CURRENT ROW
     )::bigint AS "usersAtOrAbove",
 
-    SUM(count) FILTER (WHERE score > 0) OVER (
-        PARTITION BY scope, "scopeKey"
+    COALESCE(
+        SUM(count) FILTER (WHERE score > 0) OVER (
+            PARTITION BY scope, "scopeKey"
+        ),
+        0
     )::bigint AS "totalEligibleUsers"
 
 FROM score_counts;
